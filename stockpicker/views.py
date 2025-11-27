@@ -11,6 +11,7 @@ for i in range(100):        # there are 100 stocks to pick
     tickers.append(random_stock)
 
 
+
 def index(request):
 
     return render(request,'catwalkpages/index.html')    #render the homepage 
@@ -19,15 +20,17 @@ def index(request):
 def pick(request):
     context = {
         "stocks_to_pick": tickers
+
     }
-
-        
-
     return render(request,'catwalkpages/pick.html',context)
 
 
-def reset(request):
+def stockPicker(request):
     pass
+
+def reset(request):
+
+    return redirect("pick")
 
 def catwalk(request):
     pass

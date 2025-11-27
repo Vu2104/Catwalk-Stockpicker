@@ -28,12 +28,17 @@
                 transition: 0.5s
                 
             }
+
+            button:focus{
+                background-color: rgb(107, 224, 129);
+
+            }
             /* button::before{
                 background-color: rgb(250, 209, 209);
 
-            }
+            } */
 
-            button::after{
+            /* button::after{
                 background-color: rgb(107, 224, 129);
       
             } */
@@ -54,9 +59,12 @@
         <h2>These are the 100 stocks to pick from: </h2>
         <ul>
             {% for sStock in stocks_to_pick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py-->
-            <button><a href="{%url 'pick'%}">{{sStock}}</a></button>
+            <button>{{sStock}}</button>
             {% endfor %}
         </ul>
+
+        <button id = "reset"><a href="{%url 'pick'%}">Reset</a></button>
+
     </body>
 
 
