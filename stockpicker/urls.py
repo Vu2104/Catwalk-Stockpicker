@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('',views.index, name = 'view'),       # index page with 10x10 grid
 
-    path('pick/',views.pick, name = 'pick'),   #  this is the picked stock page
+    path('pick/',views.stockPickerPage, name = 'pick'),   #  this is the picked stock page
 
     path('reset/',views.reset, name = 'reset'), # reset stock page
 
