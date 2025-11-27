@@ -1,32 +1,11 @@
-from django.shortcuts import render,redirect
-import random,string,math
+from django.shortcuts import render, redirect
+import random,string
 
-random.seed(515)
-
-def tickerFunction():
-    sTickerName = ''
-    for i in range(4):      # stock tickers symbols have 4 upper case letters ?
-            sTickerName += random.choice(string.ascii_uppercase)
-
-    return sTickerName
-
-def stockOpen():
-    fOpenValue = round(random.uniform(10,200),2)
-    return fOpenValue
-
-def stockClose():
-    fCloseValue = round(random.uniform(10,200),2)
-    return fCloseValue
-
-def stockChange(fOpen, fClose):
-    fPercentChange = ((fClose - fOpen) / abs(fClose)) * 100
-    return round(fPercentChange, 2)
-
-def stockSwing(fChange):
-    if fChange >= 0:
-        return "Up"
-    else:
-        return "Down"
+tickers = []
+summary = {}
+picked = []
+    
+## views ##
 
 def index(request):
 
@@ -35,33 +14,85 @@ def index(request):
 
 def stockPickerPage(request):
     context = {
-        "stocks_to_pick": prices.keys()
+        "stocksToPick": tickers,
+        "pickedStocks": picked,
+        "pickedStocksLength": len(picked)
     }
 
-    return render(request,'catwalkpages/pick.html',context)
+    def tickerFunction():
+        sTickerName = ''
+        for i in range(4):      # stock tickers symbols have 4 upper case letters ?
+                sTickerName += random.choice(string.ascii_uppercase)
+        return sTickerName
 
+    def stockOpen():
+        fOpenValue = round(random.uniform(10,200),2)
+        return fOpenValue
+
+    def stockClose():
+        fCloseValue = round(random.uniform(10,200),2)
+        return fCloseValue
+
+    def stockChange(fOpen, fClose):
+        fPercentChange = ((fClose - fOpen) / ((fClose + fOpen)/2)) * 100
+        return round(fPercentChange, 2)
+
+    def stockSwing(fChange):
+        if fChange >= 0:
+            return "Up"
+        else:
+            return "Down"
+
+    for i in range(100):
+        
+        sTickerName = tickerFunction()
+        tickers.append(sTickerName)
+
+    for t in tickers:
+        fOpen = stockOpen()
+
+        fClose = stockClose()
+
+        fChange = round(fClose - fOpen, 2)
+
+        fPercentChange = stockChange(fOpen, fClose)
+
+        sSwing = stockSwing(fPercentChange)
+
+        summary[t] = {"swing" : sSwing, 
+                    "open" : fOpen, 
+                    "close" : fClose, 
+                    "change" : fChange,
+                    "percentChange": fPercentChange    
+                }
+
+    changeTotal = 0.0
+    percentChangeTotal = 0.0
+
+    if len(picked) == 8:
+        for i in picked:
+            changeTotal += summary[i]["change"]
+            percentChangeTotal += summary[i]["percentChange"]
+    
+    context["summary"] = summary
+    context["changeTotal"] = round(changeTotal, 2)
+    context["percentChangeTotal"] = round(percentChangeTotal, 2)
+
+    return render(request,'catwalkpages/stockpicker.html',context)
+
+def pickStock(request):
+    ticker = request.GET.get("t")
+
+    if ticker not in picked and len(picked) < 8:
+        picked.append(ticker)
+    
+    print(picked)
+
+    return redirect('stockpicker')
 
 def reset(request):
-    pass
+    picked.clear()
+    return redirect('stockpicker')
 
 def catwalk(request):
     pass
-
-tickers = []
-
-for i in range(10):
-    
-    sTickerName = tickerFunction()
-    tickers.append(sTickerName)
- 
-prices = {}
-for t in tickers:
-    fOpen = stockOpen()
-
-    fClose = stockClose()
-
-    fChange = stockChange(fOpen, fClose)
-
-    sSwing = stockSwing(fChange)
-
-    prices[t] = [sSwing, fOpen, fClose, fChange]
