@@ -4,51 +4,37 @@ import random,string
 tickers = []
 summary = {}
 picked = []
-    
-## views ##
 
-def index(request):
-
-    return render(request,'catwalkpages/index.html')    #render the homepage 
-
-
-def stockPickerPage(request):
-    context = {
-        "stocksToPick": tickers,
-        "pickedStocks": picked,
-        "pickedStocksLength": len(picked)
-    }
-
-    def tickerFunction():
+def tickerFunction():
         sTickerName = ''
         for i in range(4):      # stock tickers symbols have 4 upper case letters ?
                 sTickerName += random.choice(string.ascii_uppercase)
         return sTickerName
 
-    def stockOpen():
+def stockOpen():
         fOpenValue = round(random.uniform(10,200),2)
         return fOpenValue
 
-    def stockClose():
+def stockClose():
         fCloseValue = round(random.uniform(10,200),2)
         return fCloseValue
 
-    def stockChange(fOpen, fClose):
+def stockChange(fOpen, fClose):
         fPercentChange = ((fClose - fOpen) / ((fClose + fOpen)/2)) * 100
         return round(fPercentChange, 2)
 
-    def stockSwing(fChange):
+def stockSwing(fChange):
         if fChange >= 0:
             return "Up"
         else:
             return "Down"
 
-    for i in range(100):
+for i in range(100):
         
         sTickerName = tickerFunction()
         tickers.append(sTickerName)
 
-    for t in tickers:
+for t in tickers:
         fOpen = stockOpen()
 
         fClose = stockClose()
@@ -65,6 +51,20 @@ def stockPickerPage(request):
                     "change" : fChange,
                     "percentChange": fPercentChange    
                 }
+    
+## views ##
+
+def index(request):
+
+    return render(request,'catwalkpages/index.html')    #render the homepage 
+
+
+def stockPickerPage(request):
+    context = {
+        "stocksToPick": tickers,
+        "pickedStocks": picked,
+        "pickedStocksLength": len(picked)
+    }
 
     changeTotal = 0.0
     percentChangeTotal = 0.0
