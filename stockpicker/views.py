@@ -95,11 +95,51 @@ def reset(request):
     return redirect('stockpicker')
 
 def catwalk(request):
-    # the first random ticker in 2 layered-perimeter
     picked.clear() # clear the ticker list when catwalk button is clicked
-    for k in range(8):
-          random_ticker = random.choice(tickers)
-          picked.append(random_ticker)
+    # for k in range(8):
+    #       random_ticker = random.choice(tickers)
+    #       picked.append(random_ticker)
+
+    random_tickers= [] # list for catwalk-algorithm randomly generated tickers
+
+    # randomly generated tickers in the 0,1,8,9 ROWS of the table
+    first_row_ticker = tickers[0:10]      # generate random ticker of the first row
+    second_row_ticker = tickers[10:20]   # generate random ticker of the second row
+    ninth_row_ticker = tickers[80:90]    # generate random ticker of the ninth row
+    tenth_row_ticker = tickers[90:100]    # generate random ticker of the tenth row
+
+    combined_row_tickers = first_row_ticker + second_row_ticker + ninth_row_ticker + tenth_row_ticker # list of the combined row tickers
+
+    # randomly generated tickers in the 0,1,8,9 COLUMNS of the table
+    first_column_ticker = tickers[0:100:10]      # same idea ?
+    second_column_ticker = tickers[1:100:10]  
+    ninth_column_ticker =  tickers[8:100:10]  
+    tenth_column_ticker = tickers[9:100:10]   
+
+    combined_comlumn_tickers = first_column_ticker + second_column_ticker + ninth_column_ticker + tenth_column_ticker #combined list of perimeter tickers
+
+    start_perimeter_ticker = random.choice(combined_row_tickers + combined_comlumn_tickers) # randomly choose one of that perimeter tickers
+    random_tickers.append(start_perimeter_ticker)
+
+
+    while len(random_tickers) < 8:
+        next_perimeter_ticker = random.choice(combined_row_tickers + combined_comlumn_tickers)  # still in the perimeter
+
+        if next_perimeter_ticker in random_tickers:    
+            continue
+
+        last_ticker = random_tickers[-1]
+        last_index = tickers.index(last_ticker)
+        next_index = tickers.index(next_perimeter_ticker)
+
+        if abs(next_index - last_index) <= 3 and abs(next_index - last_index) >= 10:    # this mean the loop if the step less than or equal 3 and if the step greater than or equal to 10
+            continue
+
+        random_tickers.append(next_perimeter_ticker)        # append to the random_tickers if all the conditions are satisfied
+
+    for a in random_tickers: # append the random stocks from algorithm to the picked stock list
+          picked.append(a)
+
     return redirect('stockpicker')
           
 
