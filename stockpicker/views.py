@@ -123,24 +123,24 @@ def catwalk(request):
 
 
     while len(random_tickers) < 8:
-        next_perimeter_ticker = random.choice(combined_row_tickers + combined_comlumn_tickers)  # still in the perimeter
+        next_ticker = random.choice(tickers)  # choose in the 100 tickers
 
-        if next_perimeter_ticker in random_tickers:    
+        if next_ticker in random_tickers:    
             continue
 
         last_ticker = random_tickers[-1]
         last_index = tickers.index(last_ticker)
-        next_index = tickers.index(next_perimeter_ticker)
+        next_index = tickers.index(next_ticker)
 
         if abs(next_index - last_index) <= 3 and abs(next_index - last_index) >= 10:    # this mean the loop if the step less than or equal 3 and if the step greater than or equal to 10
             continue
 
-        random_tickers.append(next_perimeter_ticker)        # append to the random_tickers if all the conditions are satisfied
+        random_tickers.append(next_ticker)        # append to the random_tickers if all the conditions are satisfied
 
     for a in random_tickers: # append the random stocks from algorithm to the picked stock list
           picked.append(a)
 
     return redirect('stockpicker')
-          
+
 
 
