@@ -95,4 +95,12 @@ def reset(request):
     return redirect('stockpicker')
 
 def catwalk(request):
-    pass
+    # the first random ticker in 2 layered-perimeter
+    picked.clear() # clear the ticker list when catwalk button is clicked
+    for k in range(8):
+          random_ticker = random.choice(tickers)
+          picked.append(random_ticker)
+    return redirect('stockpicker')
+          
+
+
