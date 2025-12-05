@@ -1,3 +1,5 @@
+<!-- Stockpicker page -->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,18 +12,20 @@
                 text-align: center;
             }
 
+            /* Display grid template creates the 10x10 grid for stocks to populate. auto sizing for every grid area to automatically size the buttons */
             #stockGrid{
                 border: solid 1px;
                 border-radius: 10px;
                 display: grid;
-                grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
-                grid-template-rows: auto auto auto auto auto auto auto auto auto auto;
+                grid-template-columns: auto auto auto auto auto auto auto auto auto auto; /* 10 columns */
+                grid-template-rows: auto auto auto auto auto auto auto auto auto auto; /* 10 rows */
                 justify-items: center;
                 gap: 10px;
                 padding: 25px;
                 background-color: rgb(218, 237, 237);
             }
 
+            /* unPickedStock class styles the stock buttons that are not picked by the user/catwalk */
             .unPickedStock{
                 background-color: rgb(250, 209, 209);
                 height: 100px;
@@ -34,6 +38,7 @@
                 transition: 0.5s
             }
 
+            /* pickedStock class styles the stock buttons that are picked by the user/catwalk */
             .pickedStock{
                 background-color: rgb(107, 224, 129);
                 height: 100px;
@@ -80,11 +85,13 @@
                 text-align: center;
             }
 
+            /* changes background of up/down text to green for up */
             #upText{
                 background-color: aquamarine;
                 font-weight: bold;
             }
 
+            /* changes background of up/down text to red for down */
             #downText{
                 background-color: rgba(252, 50, 50, 0.562);
                 font-weight: bold;
@@ -143,8 +150,8 @@
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    <td>{{changeTotal}}</td>
-                    <td>{{percentChangeTotal}}%</td>
+                    <td>{{changeTotal}}</td> <!-- Total dollar change of 8 stocks -->
+                    <td>{{percentChangeTotal}}%</td> <!-- Total percent change of 8 stocks -->
                 </tr>
                 
             </table>
@@ -157,7 +164,7 @@
         <br><br>
 
         <div id="stockGrid">
-            {% for sStock in stocksToPick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py-->
+            {% for sStock in stocksToPick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py with the help of the grid template -->
                 {% if sStock in pickedStocks %}
                     <a href="{% url 'pickstock' %}?t={{sStock}}"><button disabled class="pickedStock">{{sStock}}</button></a> <!-- if stock is in the pickedStock list, changes class of button to "pickedStock"-->
                 {% else %}
@@ -173,4 +180,3 @@
     </body>
 
 
-</html>
