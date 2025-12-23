@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stock Pick</title>
+        <style>
+            h1{
+                text-align: center;
+            }
+
+            #stockGrid{
+                border: solid 1px;
+                border-radius: 10px;
+                display: grid;
+                grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+                grid-template-rows: auto auto auto auto auto auto auto auto auto auto;
+                justify-items: center;
+                gap: 10px;
+                padding: 25px;
+                background-color: rgb(218, 237, 237);
+            }
+
+            .unPickedStock{
+                background-color: rgb(250, 209, 209);
+                height: 100px;
+                width: 100px;
+                cursor: pointer;
+            }
+
+            .unPickedStock:hover{
+                background-color: rgb(107, 224, 129);
+                transition: 0.5s
+            }
+
+            .pickedStock{
+                background-color: rgb(107, 224, 129);
+                height: 100px;
+                width: 100px;
+            }
+
+            a{
+                all: unset;
+            }
+
+            table{
+                border: 1px solid black;
+                border-radius: 5px;
+                background-color: rgb(214, 249, 249);
+
+            }
+
+            td, th{
+                padding: 5px;
+            }
+
+            #reset_button{
+                width:75px;
+                height: 25px;
+                background-color: rgba(255, 83, 83, 0.726);
+                cursor: pointer; /* change the cursor to a cursor hand icon when hovering*/
+                border-radius: 10px;
+            }
+
+            #catwalk_button{
+                width:75px;
+                height: 25px;
+                background-color: rgba(158, 176, 255, 0.991);
+                cursor: pointer;
+                border-radius: 10px;
+
+            }
+
+            #buttons{
+                text-align: center;
+            }
+
+            #summary{
+                text-align: center;
+            }
+
+            #upText{
+                background-color: aquamarine;
+                font-weight: bold;
+            }
+
+            #downText{
+                background-color: rgba(252, 50, 50, 0.562);
+                font-weight: bold;
+            }
+
+            
+
+        </style>
+
+    </head>
+
+    <body>
+        <h1>Welcome to the Catwalk Stockpicker! Let's make your investment pay off!💲💲💲</h1>
+
+        {% if pickedStocksLength < 8 %}
+            <h2>These are the 100 stocks to pick from(Please choose 8 stocks): </h2>
+        {% else %}
+            <h2>Summary - Here are the results of the stocks you picked!</h2>
+            <table>
+                <tr>
+                    <th> </th>
+                    <th>Stock Ticker</th>
+                    <th>Up/Down</th>
+                    <th>Open</th>
+                    <th>Close</th>
+                    <th>$ Change</th>
+                    <th>% Change</th>
+                </tr>
+
+                {% for key, value in summary.items %}
+                    {% if key in pickedStocks %}
+                        <tr>
+                            <td> </td> <!--white space to justify the table-->
+                            <td>{{key}}</td>
+
+                            <td id = "{% if value.swing == 'Up' %}upText{% else %}downText{% endif %}"> <!--if value.swing is "Up" then the id for CSS is upText and vice versa-->
+                                {% if value.swing == 'Up' %}
+                                    {{value.swing}}↑
+                                {% else %}
+                                    {{value.swing}}↓
+                                {% endif %}
+                            </td> <!--This DTL tag changes the background color of value.swing value to either green or red and the up/down arrow-->
+
+                            <td>{{value.open}}</td>
+                            <td>{{value.close}}</td>
+                            <td>{{value.change}}</td>
+                            <td>{{value.percentChange}}%</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+                <tr>
+                    <th>Total</th>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td>{{changeTotal}}</td>
+                    <td>{{percentChangeTotal}}%</td>
+                </tr>
+            </table>
+        {% endif %}
+
+        <br>    
+
+        <a href="{% url 'reset' %}"><button id = "reset_button"><b>Reset</b></button></a> <!--Reset button, will call the reset url and its function-->
+        <a href="{% url 'catwalk' %}"><button id = "catwalk_button"><b>Catwalk</b></button></a> <!--Catwalk button, will call the catwalk url and its function to start the algorithm-->
+        <br><br>
+
+        <div id="stockGrid">
+            {% for sStock in stocksToPick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py-->
+                {% if sStock in pickedStocks %}
+                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button disabled class="pickedStock">{{sStock}}</button></a>
+                {% else %}
+                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button class="unPickedStock" type="button" onclick="">{{sStock}}</button></a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        
+
+
+
+    </body>
+
+
+</html>

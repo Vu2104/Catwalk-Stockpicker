@@ -1,19 +1,43 @@
+{%load static%}
 <!DOCTYPE html>
 <html>
     <head>
         <title>Home Page</title>
         <style>
             h1 , h2{
-                text-align: center;
+                text-align:center;
+                font-size: 4em;
+                color:rgb(255, 255, 255);
             }
+
+            body{
+                background-image: url("{% static 'Blue_background_stock.png' %}");
+                background-size: cover;
+            }
+
+            .container{
+                border: 1px solid;
+                border-radius: 10px;
+                background-color: rgba(7, 12, 12, 0.776);
+                transition: all 0.3s ease-in-out; 
+
+            }
+
+            .container:hover{
+                scale:101%;
+            }
+
 
         </style>
 
     </head>
 
     <body>
-        <h1>Welcome to the Catwalk Stockpicker! Let's make your investment pays off!</h1>
-        <h2><a href = "{%url 'pick'%}"> Here to to go the Stockpicker!</a></h2> <!--Redirect the homepage to stockpicker page-->
+        <div class = "container">
+            <h1>Welcome to the Catwalk Stockpicker! Let's make your investment pays off!</h1>
+            <h2><a href = "{%url 'stockpicker'%}"> Click here to to go the Stockpicker!</a></h2> <!--Redirect the homepage to stockpicker page-->
+        </div>
+
     </body>
 
 
