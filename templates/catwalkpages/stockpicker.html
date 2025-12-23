@@ -1,24 +1,31 @@
+<!-- Stockpicker page -->
+
 <!DOCTYPE html>
 <html>
     <head>
         <title>Stock Pick</title>
         <style>
+            body{
+                background-color: rgba(249, 254, 255, 0.783);
+            }
             h1{
                 text-align: center;
             }
 
+            /* Display grid template creates the 10x10 grid for stocks to populate. auto sizing for every grid area to automatically size the buttons */
             #stockGrid{
                 border: solid 1px;
                 border-radius: 10px;
                 display: grid;
-                grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
-                grid-template-rows: auto auto auto auto auto auto auto auto auto auto;
+                grid-template-columns: auto auto auto auto auto auto auto auto auto auto; /* 10 columns */
+                grid-template-rows: auto auto auto auto auto auto auto auto auto auto; /* 10 rows */
                 justify-items: center;
                 gap: 10px;
                 padding: 25px;
                 background-color: rgb(218, 237, 237);
             }
 
+            /* unPickedStock class styles the stock buttons that are not picked by the user/catwalk */
             .unPickedStock{
                 background-color: rgb(250, 209, 209);
                 height: 100px;
@@ -31,6 +38,7 @@
                 transition: 0.5s
             }
 
+            /* pickedStock class styles the stock buttons that are picked by the user/catwalk */
             .pickedStock{
                 background-color: rgb(107, 224, 129);
                 height: 100px;
@@ -77,11 +85,13 @@
                 text-align: center;
             }
 
+            /* changes background of up/down text to green for up */
             #upText{
                 background-color: aquamarine;
                 font-weight: bold;
             }
 
+            /* changes background of up/down text to red for down */
             #downText{
                 background-color: rgba(252, 50, 50, 0.562);
                 font-weight: bold;
@@ -96,9 +106,9 @@
     <body>
         <h1>Welcome to the Catwalk Stockpicker! Let's make your investment pay off!💲💲💲</h1>
 
-        {% if pickedStocksLength < 8 %}
+        {% if pickedStocksLength < 8 %} <!-- This DTL tag checks for the length of the picked list in views.py -->
             <h2>These are the 100 stocks to pick from(Please choose 8 stocks): </h2>
-        {% else %}
+        {% else %}  <!-- Once the length of picked list is 8, changes the template to show a table summary of the picked stocks -->
             <h2>Summary - Here are the results of the stocks you picked!</h2>
             <table>
                 <tr>
@@ -111,11 +121,12 @@
                     <th>% Change</th>
                 </tr>
 
-                {% for key, value in summary.items %}
-                    {% if key in pickedStocks %}
+                {% for key, value in summary.items %} <!-- For loop iterates over summary dictionary to display stocks summary values.
+                                                            Creates table rows for every stock picked and its summary details from summary dictionary -->
+                    {% if key in pickedStocks %} <!-- Checks if stock is in the picked stocks list to display correct stocks picked -->
                         <tr>
                             <td> </td> <!--white space to justify the table-->
-                            <td>{{key}}</td>
+                            <td>{{key}}</td> <!-- Displays stock ticker symbol -->
 
                             <td id = "{% if value.swing == 'Up' %}upText{% else %}downText{% endif %}"> <!--if value.swing is "Up" then the id for CSS is upText and vice versa-->
                                 {% if value.swing == 'Up' %}
@@ -125,23 +136,24 @@
                                 {% endif %}
                             </td> <!--This DTL tag changes the background color of value.swing value to either green or red and the up/down arrow-->
 
-                            <td>{{value.open}}</td>
-                            <td>{{value.close}}</td>
-                            <td>{{value.change}}</td>
-                            <td>{{value.percentChange}}%</td>
+                            <td>{{value.open}}</td> <!-- Displays open value of stock -->
+                            <td>{{value.close}}</td> <!-- Displays close value of stock -->
+                            <td>{{value.change}}</td> <!-- Displays dollar change of stock -->
+                            <td>{{value.percentChange}}%</td> <!-- Displays percent change of stock -->
                         </tr>
                     {% endif %}
                 {% endfor %}
 
-                <tr>
+                <tr> <!-- Final table row displays totals, dollar change total and percent change total -->
                     <th>Total</th>
+                    <td> </td> <!-- Empty spaces, no data needed to be displayed for Totals row -->
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    <td> </td>
-                    <td>{{changeTotal}}</td>
-                    <td>{{percentChangeTotal}}%</td>
+                    <td>{{changeTotal}}</td> <!-- Total dollar change of 8 stocks -->
+                    <td>{{percentChangeTotal}}%</td> <!-- Total percent change of 8 stocks -->
                 </tr>
+                
             </table>
         {% endif %}
 
@@ -152,11 +164,11 @@
         <br><br>
 
         <div id="stockGrid">
-            {% for sStock in stocksToPick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py-->
+            {% for sStock in stocksToPick %} <!--I used DTL tags here to render the stock tickers in HTML from views.py with the help of the grid template -->
                 {% if sStock in pickedStocks %}
-                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button disabled class="pickedStock">{{sStock}}</button></a>
+                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button disabled class="pickedStock">{{sStock}}</button></a> <!-- if stock is in the pickedStock list, changes class of button to "pickedStock"-->
                 {% else %}
-                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button class="unPickedStock" type="button" onclick="">{{sStock}}</button></a>
+                    <a href="{% url 'pickstock' %}?t={{sStock}}"><button class="unPickedStock" type="button" onclick="">{{sStock}}</button></a> <!-- if stock is not in the pickedStock list, changes class of button to "unPickedStock"-->
                 {% endif %}
             {% endfor %}
         </div>
@@ -168,4 +180,3 @@
     </body>
 
 
-</html>
