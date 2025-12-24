@@ -89,6 +89,7 @@ This project was developed as part of an MIS course to demonstrate how business 
 - Improve selection constraints and analytics
 
 ---
+<img width="2559" height="1403" alt="image" src="https://github.com/user-attachments/assets/dd31848b-b9bd-45bd-87e2-46428dd0687e" />
 
 ## Author
 
